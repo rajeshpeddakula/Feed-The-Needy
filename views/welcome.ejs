@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <title>Feed the Needy - Donate or Receive</title>
+</head>
+<body>
+    <div class="welcome">
+        <header>
+            <nav>
+                <div id="company" class="nav-left">Feed the Needy</div>
+                <div class="nav-right">
+                    <ul>
+                        <li class="donate" onclick="showDonate()" aria-label="Donate food">Donate</li>
+                        <li class="receive" onclick="showReceive()" aria-label="Receive food donations">Receive</li>
+                        
+                    </ul>
+                </div>
+                <div id="loginBtn">
+                    <form action="/logout" method="POST">
+                        <button>Logout</button>
+                    </form>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    <div class="sidenav">
+        <ul>
+            <li>Dashboard</li>
+            <li class="donate" onclick="showDonate()">Donate</li>
+            <li class="receive" onclick="showReceive()">Receive</li>
+            
+        </ul>
+    </div>
+
+    <div class="main">
+        <!-- Donate Section -->
+        <div id="donateSection" class="section hidden">
+            <h2>Donate Food</h2>
+            <form onsubmit="handleDonation(event)">
+                <div class="inputBox">
+                    <label for="donor">Name</label>
+                    <input type="text" id="donor" name="donor" placeholder="Enter your name" required />
+                </div>
+                <div class="inputBox">
+                    <label for="contactInfo">Mobile Number</label>
+                    <input type="tel" id="contactInfo" name="contactInfo" pattern="[0-9]{10}" placeholder="Enter Mobile Number" required />
+                </div>
+                <div class="inputBox">
+                    <label for="location">Address</label>
+                    <input type="text" id="location" name="location" placeholder="Enter your address" required />
+                </div>
+                <div class="inputBox">
+                    <label for="quantity">Serving Capacity</label>
+                    <input type="number" id="quantity" name="quantity" placeholder="Enter Serving Capacity" required />
+                </div>
+                <div class="inputBox">
+                    <label for="foodDetails">Food Details</label>
+                    <input type="text" id="foodDetails" name="foodDetails" placeholder="Enter food details" required />
+                </div>
+                <button type="submit">Submit Donation</button>
+            </form>
+
+            <!-- Thank You Message -->
+            <div id="thankYouMessage" class="hidden" style="margin-top: 20px; color: green;">
+                Thank you for your donation! Your generosity will help those in need.
+            </div>
+        </div>
+
+        <!-- Receive Section -->
+        <div id="receiveSection" class="section hidden">
+            <h2>Available Donations</h2>
+            <ul id="donationList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Helper to show and hide sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function showDonate() {
+            showSection("donateSection");
+        }
+
+        function showReceive() {
+            showSection("receiveSection");
+            fetchDonations();
+        }
+
+        async function handleDonation(event) {
+            event.preventDefault();
+
+            const donationData = {
+                donor: document.getElementById("donor").value,
+                contactInfo: document.getElementById("contactInfo").value,
+                location: document.getElementById("location").value,
+                quantity: document.getElementById("quantity").value,
+                foodDetails: document.getElementById("foodDetails").value,
+            };
+
+            try {
+                const response = await fetch('/donate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(donationData),
+                });
+
+                if (response.ok) {
+                    document.getElementById("thankYouMessage").classList.remove("hidden");
+                    setTimeout(() => {
+                        document.getElementById("thankYouMessage").classList.add("hidden");
+                    }, 5000);
+                    document.querySelector("#donateSection form").reset();
+                } else {
+                    alert("Failed to submit donation. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error submitting donation:", error);
+                alert("An error occurred. Please try again.");
+            }
+        }
+
+        async function fetchDonations() {
+            try {
+                const response = await fetch('/donations');
+                const donations = await response.json();
+                renderDonations(donations);
+            } catch (error) {
+                console.error("Error fetching donations:", error);
+                alert("Could not load donations. Please try again.");
+            }
+        }
+
+        function renderDonations(donations) {
+            const donationList = document.getElementById("donationList");
+            donationList.innerHTML = '';
+
+            donations.forEach(donation => {
+                if (donation.status === "available") {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        <strong>Donor:</strong> ${donation.donor}, 
+                        <strong>Location:</strong> ${donation.location}, 
+                        <strong>Capacity:</strong> ${donation.quantity} servings 
+                        <button class="accept-btn" data-id="${donation._id}" data-contact="${donation.contactInfo}" data-location="${donation.location}">Accept</button>
+                    `;
+                    donationList.appendChild(listItem);
+                }
+            });
+
+            // Attach event listeners for Accept buttons
+            donationList.querySelectorAll('.accept-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const { id, contact, location } = button.dataset;
+                    if (confirm("Are you sure you want to accept this donation?")) {
+                        acceptDonation(id, contact, location);
+                    }
+                });
+            });
+        }
+
+        async function acceptDonation(id, contactInfo, location) {
+            try {
+                const response = await fetch(`/donations/${id}/accept`, { method: 'POST' });
+
+                if (response.ok) {
+                    alert(`Donation accepted! Contact the donor at: ${contactInfo}`);
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, "_blank");
+                    fetchDonations();
+                } else {
+                    alert('Failed to accept donation.');
+                }
+            } catch (error) {
+                console.error("Error accepting donation:", error);
+                alert("An error occurred. Please try again.");
+            }
+        }
+
+    
+    </script>
+</body>
+</html>

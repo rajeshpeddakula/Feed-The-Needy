@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en-gb" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>FEED THE NEEDY</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; color: #333; }
+        header, section, footer { padding: 20px; }
+
+        .header {
+            background: linear-gradient(45deg, #0066cc, #00cc99);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+        .navbar-nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .navbar-toggle {
+            font-size: 1.5em;
+            background: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: none;
+            transition: color 0.3s;
+        }
+        .navbar-toggle:hover {
+            color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggle {
+                display: block;
+            }
+            .navbar-nav {
+                display: none;
+                flex-direction: column;
+                gap: 15px;
+                background-color: #004080;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                padding: 20px;
+                border-radius: 8px;
+                width: 200px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+            .navbar-nav.open {
+                display: flex;
+            }
+        }
+
+        .banner-container {
+            position: relative;
+            text-align: center;
+            color: white;
+            background: url('/background.jpg') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .banner-content { text-align: center; }
+        h1 { font-size: 2.5em; }
+
+        #aboutUs { display: flex; align-items: center; gap: 20px; margin-top: 20px; }
+        #aboutUs img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-right: 20px;
+        }
+        .txtHead {
+            color: #555;
+            text-align: left;
+        }
+        .txtHead h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .txtHead p {
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        #contactUs h2 { font-size: 1.8em; margin-bottom: 10px; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .form-control::placeholder { color: #aaa; font-size: 0.9em; }
+        .form-group label {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+        button {
+            padding: 12px 25px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:hover { background-color: #0056b3; }
+
+        #quote { background-color: #eee; padding: 40px; text-align: center; }
+        
+        footer { background-color: #222; color: #aaa; text-align: center; padding: 10px; }
+        .social a { color: white; margin: 0 5px; }
+        .topHome { color: white; position: fixed; bottom: 20px; right: 20px; text-decoration: none; font-size: 24px; }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="navbar">
+            <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
+            <nav>
+                <ul class="navbar-nav" id="navMenu">
+                    <li><a href="#home">Home</a></li>
+                    <li id="registerLink"><a href="/signup">Register</a></li>
+                    <li id="loginLink"><a href="/login">Login</a></li>
+                    <li id="donateLink" style="display:none;"><a href="#donate">Donate</a></li>
+                    <li id="receiveLink" style="display:none;"><a href="#receive">Receive</a></li>
+                    <li><a href="#aboutUs">About Us</a></li>
+                    <li><a href="#contactUs">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home">
+        <div class="banner-container">
+            <div class="banner-content">
+                <h1>FEED THE NEEDY</h1>
+                <p>Providing food for those in need</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="aboutUs">
+        <div class="tileBox">
+            <img src="/pic1.jpg" alt="Feed The Needy">
+            <div class="txtHead">
+                <h2>Hello, Welcome to FEED THE NEEDY</h2>
+                <p>"There is food for everyone on this planet, but not everyone eats..."</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contactUs">
+        <h2>Let's Keep In Touch!</h2>
+        <p>If you'd like to get in touch, please fill out the form below.</p>
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="comments">Message</label>
+                <textarea class="form-control" id="comments" rows="4" placeholder="Enter your message"></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <section id="quote">
+        <h2>"Dreams are extremely important. You can’t do it unless you imagine it."</h2>
+    </section>
+
+    <footer>
+        <div class="social">
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-facebook"></i></a>
+        </div>
+        <p>&copy; 2024 FEED THE NEEDY</p>
+    </footer>
+    
+    <script>
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

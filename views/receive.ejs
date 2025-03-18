@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Donations</title>
+  <link rel="stylesheet" href="/path/to/your/styles.css">
+</head>
+<body>
+  <h1>Available Donations</h1>
+  
+  <ul>
+    <% donations.forEach(donation => { %>
+      <% if (donation.status === 'available') { %>
+        <li>
+          <strong>Food Details:</strong> <%= donation.foodDetails %><br>
+          <strong>Quantity:</strong> <%= donation.quantity %> servings<br>
+          <strong>Location:</strong> <a href="https://www.google.com/maps/search/<%= encodeURIComponent(donation.location) %>" target="_blank"><%= donation.location %></a><br>
+          
+          <form action="/receive/<%= donation._id %>" method="POST" onsubmit="return confirmClaim()">
+            <button type="submit">Claim Donation</button>
+          </form>
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
+
+  <script>
+    function confirmClaim() {
+      return confirm("Are you sure you want to claim this donation?");
+    }
+  </script>
+</body>
+</html>
